@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>City weather</title>
+		<link rel="stylesheet" href="cdn/bootstrap.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row justify-content-center m-2">
+			<h3>Sprawdź, które miasto ma najlepszą pogodę</h3>
+		</div>
+		
+		<hr>
+		<!-- Cities input -->
+		<div class="row mx-0 justify-content-center">
+			<form method="GET">
+				<div class="form-row m-2 align-items-end">
+					<div class="col">
+						<label for="inputEmail4">Podaj miasto</label>
+						<input type="text" class="form-control" name="city1" placeholder="Pierwsze miasto" value="Hurzuf">
+					</div>
+					<div class="col">
+						<label for="inputEmail4">Podaj miasto</label>
+						<input type="text" class="form-control" name="city2" placeholder="Drugie miasto" value="Novinki">
+					</div>
+					<div class="col">
+						<label for="inputEmail4">Podaj miasto</label>
+						<input type="text" class="form-control" name="city3" placeholder="Trzecie miasto" value="Gorkhā">
+					</div>
+					<div class="col">
+						<label for="inputEmail4">Podaj miasto</label>
+						<input type="text" class="form-control" name="city4" placeholder="Czwarte miasto" value="State of Haryāna">
+					</div>
+					<div class="col">
+						<button type="submit" class="btn btn-primary mx-2">Porównaj</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- Cities input end-->
+
+		<hr>
+
+		<!-- Ranking result -->
+		
+			<div class="row mx-0">
+				<h4 class="col text-center">Ranking miast</h4>
+			</div>
+			<div class="row justify-content-center mx-0">
+				<div class="col-8 mx-auto">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+							  	<tr>
+									<th scope="col">#</th>
+									<th scope="col">Miasto</th>
+									<th scope="col">Wynik</th>
+									<th scope="col">Temperatura</th>
+									<th scope="col">Wiatr</th>
+									<th scope="col">Wilgotność</th>
+							  	</tr>
+							</thead>
+							<tbody>
+							  	<tr>
+									<th scope="row">1</th>
+									<td>Mark</td>
+									<td>Otto</td>
+									<td>@mdo</td>
+									<td>@mdo</td>
+									<td>@mdo</td>
+							  	</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+
+		<!-- Ranking result end-->
+	</div>
+	
+</body>
+</html>
