@@ -4,25 +4,34 @@
 	
 	// Handle the Form Respose
 	if(isset($_GET['submit'])){
+		
 		// Get cities from Form
-		$citys = [];
+		$cities = [];
 		for ($i = 0; $i < count($_GET)-1; $i++) {
 			if(array_values($_GET)[$i]){
-				array_push($citys, array_values($_GET)[$i]);
+				array_push($cities, array_values($_GET)[$i]);
 			}
 		}
 
 		// Validation the number of cities
-		if(count($citys) < 2){
+		if(count($cities) < 2){
 			$errorsData['citiesCount'] = 'Liczba miast jest za mała, aby je porównać!';
 		}else{
-			
-			print_r($citys);
+			$query = [];
+			foreach ($cities as $city) {
+				// array_push($query, json_decode(file_get_contents('api.openweathermap.org/data/2.5/weather?q='.$city)));
+				array_push($query, json_decode(file_get_contents('data/example.json')));
+			}
+			print_r($query[0]);
 		}
 	}
 
-		// $citysApi = file_get_contents("data/citys.json");
-		// $data = json_decode($citysApi, JSON_PRETTY_PRINT);
+		// $data = file_get_contents("data/city.list.min.json");
+		// $citysList = json_decode($data, JSON_PRETTY_PRINT);
+		// $results = array_filter($citysList, function($cityId) {
+		// 	return $cityId['name'] == 'Hurzuf';
+		//   });
+		//   print_r($results[0]['id'])
 		// // $array = get_object_vars($data);
 		// $citys = array($data);
 		// // $array = get_object_vars($citys);
@@ -87,7 +96,7 @@
 		<!-- Ranking result -->
 		
 			<div class="row mx-0">
-				<h4 class="col text-center">Ranking miast</h4>
+				<h4 class="col text-center">Ranking z dnia <span>09.09.2019</span></h4>
 			</div>
 			<div class="row justify-content-center mx-0">
 				<div class="col-8 mx-auto">
