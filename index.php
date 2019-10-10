@@ -1,24 +1,35 @@
 <?php
 
 	$errorsData = array("citiesCount" => '');
-
-	// Get cities from form
+	
+	// Handle the Form Respose
 	if(isset($_GET['submit'])){
-		$city1 = $_GET['city1'];
-		$city2 = $_GET['city2'];
-		$city3 = $_GET['city3'];
-		$city4 = $_GET['city4'];
-		$citysCount = (bool)$_GET['city1'] + (bool)$_GET['city2'] + (bool)$_GET['city3'] + (bool)$_GET['city4'];
-		if($citysCount<2){
-			$errorsData['citiesCount'] = 'Liczba miast jest za mała, aby je porównać';
-		}else{
-			echo $citysCount;
+		// Get cities from Form
+		$citys = [];
+		for ($i = 0; $i < count($_GET)-1; $i++) {
+			if(array_values($_GET)[$i]){
+				array_push($citys, array_values($_GET)[$i]);
+			}
 		}
-		
 
+		// Validation the number of cities
+		if(count($citys) < 2){
+			$errorsData['citiesCount'] = 'Liczba miast jest za mała, aby je porównać!';
+		}else{
+			
+			print_r($citys);
+		}
 	}
 
-
+		// $citysApi = file_get_contents("data/citys.json");
+		// $data = json_decode($citysApi, JSON_PRETTY_PRINT);
+		// // $array = get_object_vars($data);
+		// $citys = array($data);
+		// // $array = get_object_vars($citys);
+		// // print_r($properties);
+		// print_r($data[0]);
+		
+		// // print_r($data[1]->name);
 
 ?>
 <!DOCTYPE html>
