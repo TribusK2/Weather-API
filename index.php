@@ -97,22 +97,28 @@
 				$city->humidity_pos = array_search($city->name, array_column($humidityArray, 'name'))+1;
 			}
 
-			print_r($city1->humidity_pos." ".$city1->name." ".$city1->parameters->main->humidity);
-			// print_r($city1->wind_pos);
-			// print_r($city1->humidity_pos);
-			?><br><?php
-			print_r($city2->humidity_pos." ".$city2->name." ".$city2->parameters->main->humidity);
-			// print_r($city2->wind_pos);
-			// print_r($city2->humidity_pos);
-			?><br><?php
-			print_r($city3->humidity_pos." ".$city3->name." ".$city3->parameters->main->humidity);
-			// print_r($city3->wind_pos);
-			// print_r($city3->humidity_pos);
-			?><br><?php
-			print_r($city4->humidity_pos." ".$city4->name." ".$city4->parameters->main->humidity);
-			// print_r($city4->wind_pos);
-			// print_r($city4->humidity_pos);
-			?><br><?php
+			// Calculate the summary position of cities
+			$temp_factor = 0.6;
+			$wind_factor = 0.3;
+			$umidity_factor = 0.1;
+			foreach($cities as $city){
+				$city->score = 	(100 - 10 * ($city->temp_pos - 1)) * $temp_factor + 
+								(100 - 10 * ($city->wind_pos - 1)) * $wind_factor +
+								(100 - 10 * ($city->humidity_pos - 1)) * $umidity_factor;
+			}
+
+			// Sort cities by result
+			function sort_score($a, $b) {
+				if($a->score == $b->score){
+					return 0;
+				}
+				return ($a->score > $b->score) ? -1 : 1;
+			}
+
+			usort($cities, "sort_score");
+
+
+		
 		
 		}
 	}
