@@ -20,25 +20,48 @@
 			$query = [];
 			foreach ($cities as $city) {
 				// array_push($query, json_decode(file_get_contents('api.openweathermap.org/data/2.5/weather?q='.$city)));
-				array_push($query, json_decode(file_get_contents('data/example.json')));
 			}
-			print_r($query[0]);
+			array_push($query, json_decode(file_get_contents('data/example1.json')));
+			array_push($query, json_decode(file_get_contents('data/example2.json')));
+			array_push($query, json_decode(file_get_contents('data/example3.json')));
+			array_push($query, json_decode(file_get_contents('data/example4.json')));
+
+			// Set fuction to descending sort of temp
+			function sort_temp($a, $b) {
+				if($a->main->temp == $b->main->temp){
+					return 0;
+				}
+				return ($a->main->temp > $b->main->temp) ? -1 : 1;
+			}
+
+			// Set fuction to ascending sort of wind
+			function sort_wind($a, $b) {
+				if($a->main->temp == $b->main->temp){
+					return 0;
+				}
+				return ($a->wind->speed < $b->wind->speed) ? -1 : 1;
+			}
+
+			// Set fuction to ascending sort of wind
+			function sort_humidity($a, $b) {
+				if($a->main->temp == $b->main->temp){
+					return 0;
+				}
+				return ($a->main->humidity < $b->main->humidity) ? -1 : 1;
+			}
+			
+			// Define arrays to sort
+			$tempArray = $query;
+			$windArray = $query;
+			$humidityArray = $query;
+
+			uasort($tempArray, "sort_temp");
+			uasort($windArray, "sort_wind");
+			uasort($humidityArray, "sort_humidity");
+
+			print_r($humidityArray);
 		}
 	}
-
-		// $data = file_get_contents("data/city.list.min.json");
-		// $citysList = json_decode($data, JSON_PRETTY_PRINT);
-		// $results = array_filter($citysList, function($cityId) {
-		// 	return $cityId['name'] == 'Hurzuf';
-		//   });
-		//   print_r($results[0]['id'])
-		// // $array = get_object_vars($data);
-		// $citys = array($data);
-		// // $array = get_object_vars($citys);
-		// // print_r($properties);
-		// print_r($data[0]);
-		
-		// // print_r($data[1]->name);
 
 ?>
 <!DOCTYPE html>
