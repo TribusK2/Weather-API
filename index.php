@@ -116,10 +116,7 @@
 			}
 
 			usort($cities, "sort_score");
-
-
-		
-		
+			
 		}
 	}
 
@@ -189,28 +186,32 @@
 							  	<tr>
 									<th scope="col">#</th>
 									<th scope="col">Miasto</th>
-									<th scope="col">Wynik</th>
-									<th scope="col">Temperatura</th>
-									<th scope="col">Wiatr</th>
-									<th scope="col">Wilgotność</th>
+									<th scope="col" class="text-center">Wynik</th>
+									<th scope="col" class="text-center">Temperatura</th>
+									<th scope="col" class="text-center">Wiatr</th>
+									<th scope="col" class="text-center">Wilgotność</th>
 							  	</tr>
 							</thead>
 							<tbody>
-							  	<tr>
-									<th scope="row">1</th>
-									<td>Mark</td>
-									<td>Otto</td>
-									<td>@mdo</td>
-									<td>@mdo</td>
-									<td>@mdo</td>
+							<?php 	$j = 0;
+							 		foreach($cities as $city){?>
+								<tr>
+									<th scope="row"><?php $j += 1; echo $j?></th>
+									<td><?php echo $city->name ?></td>
+									<td class="text-center"><?php echo $city->score ?></td>
+									<td class="text-center"><?php echo $city->parameters->main->temp - 273.15 ?> <sup>o</sup>C</td>
+									<td class="text-center"><?php echo $city->parameters->wind->speed ?> m/s</td>
+									<td class="text-center"><?php echo $city->parameters->main->humidity ?> %</td>
 							  	</tr>
+							<?php } ?>
+							  
+							
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-			
-
+		
 		<!-- Ranking result end-->
 	</div>
 	
