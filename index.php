@@ -193,8 +193,11 @@
 							  	</tr>
 							</thead>
 							<tbody>
-							<?php 	$j = 0;
-							 		foreach($cities as $city){?>
+							<?php
+							if(!empty($cities)){
+								$j = 0;
+							 	foreach($cities as $city){
+							?>
 								<tr>
 									<th scope="row"><?php $j += 1; echo $j?></th>
 									<td><?php echo $city->name ?></td>
@@ -203,9 +206,10 @@
 									<td class="text-center"><?php echo $city->parameters->wind->speed ?> m/s</td>
 									<td class="text-center"><?php echo $city->parameters->main->humidity ?> %</td>
 							  	</tr>
-							<?php } ?>
-							  
-							
+							<?php 
+								}
+							} 
+							?>
 							</tbody>
 						</table>
 					</div>
