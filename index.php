@@ -6,19 +6,19 @@
 	if(isset($_GET['submit'])){
 		
 		// Get cities from Form
-		$cities = [];
+		$citiesNames = [];
 		for ($i = 0; $i < count($_GET)-1; $i++) {
 			if(array_values($_GET)[$i]){
-				array_push($cities, array_values($_GET)[$i]);
+				array_push($citiesNames, array_values($_GET)[$i]);
 			}
 		}
 
 		// Validation the number of cities
-		if(count($cities) < 2){
+		if(count($citiesNames) < 2){
 			$errorsData['citiesCount'] = 'Liczba miast jest za mała, aby je porównać!';
 		}else{
 			$query = [];
-			foreach ($cities as $city) {
+			foreach ($citiesNames as $city) {
 				// array_push($query, json_decode(file_get_contents('api.openweathermap.org/data/2.5/weather?q='.$city)));
 			}
 			array_push($query, json_decode(file_get_contents('data/example1.json')));
@@ -26,40 +26,83 @@
 			array_push($query, json_decode(file_get_contents('data/example3.json')));
 			array_push($query, json_decode(file_get_contents('data/example4.json')));
 
-			// Set fuction to descending sort of temp
+			$cities = [];
+
+			if(!empty($citiesNames[0])){
+				$city1 = new stdClass();
+				$city1->name = $citiesNames[0];
+				$city1->parameters = $query[0];
+				array_push($cities, $city1);
+			}
+
+			if(!empty($citiesNames[1])){
+				$city2 = new stdClass();
+				$city2->name = $citiesNames[1];
+				$city2->parameters = $query[1];
+				array_push($cities, $city2);
+			}
+
+			if(!empty($citiesNames[2])){
+				$city3 = new stdClass();
+				$city3->name = $citiesNames[2];
+				$city3->parameters = $query[2];
+				array_push($cities, $city3);
+			}
+
+			if(!empty($citiesNames[3])){
+				$city4 = new stdClass();
+				$city4->name = $citiesNames[3];
+				$city4->parameters = $query[3];
+				array_push($cities, $city4);
+			}
+
+			
+			print_r($cities[0]->name);
+			?><br><?php
+			print_r($cities[1]->name);
+			?><br><?php
+			print_r($cities[2]->name);
+			?><br><?php
+			print_r($cities[3]->name);
+			?><br><?php
+				
+
+			
+
+			// Set fuction to descending sort by temp
 			function sort_temp($a, $b) {
-				if($a->main->temp == $b->main->temp){
+				if($a->parameters->main->temp == $b->parameters->main->temp){
 					return 0;
 				}
-				return ($a->main->temp > $b->main->temp) ? -1 : 1;
+				return ($a->parameters->main->temp > $b->parameters->main->temp) ? -1 : 1;
 			}
 
-			// Set fuction to ascending sort of wind
+			// Set fuction to ascending sort by wind
 			function sort_wind($a, $b) {
-				if($a->main->temp == $b->main->temp){
+				if($a->parameters->wind->speed == $b->parameters->wind->speed){
 					return 0;
 				}
-				return ($a->wind->speed < $b->wind->speed) ? -1 : 1;
+				return ($a->parameters->wind->speed < $b->parameters->wind->speed) ? -1 : 1;
 			}
 
-			// Set fuction to ascending sort of wind
+			// Set fuction to ascending sort by humidity
 			function sort_humidity($a, $b) {
-				if($a->main->temp == $b->main->temp){
+				if($a->parameters->main->humidity == $b->parameters->main->humidity){
 					return 0;
 				}
-				return ($a->main->humidity < $b->main->humidity) ? -1 : 1;
+				return ($a->parameters->main->humidity < $b->parameters->main->humidity) ? -1 : 1;
 			}
 			
 			// Define arrays to sort
-			$tempArray = $query;
-			$windArray = $query;
-			$humidityArray = $query;
+			$tempArray = $cities;
+			$windArray = $cities;
+			$humidityArray = $cities;
 
-			uasort($tempArray, "sort_temp");
-			uasort($windArray, "sort_wind");
-			uasort($humidityArray, "sort_humidity");
+			// Sorting arrays
+			usort($tempArray, "sort_temp");
+			usort($windArray, "sort_wind");
+			usort($humidityArray, "sort_humidity");
 
-			print_r($humidityArray);
 		}
 	}
 

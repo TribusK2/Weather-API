@@ -1,6 +1,6 @@
 {
     "coord": {
-      "lon": -122.08,
+      "lon": -400,
       "lat": 37.39
     },
     "weather": [
@@ -22,7 +22,7 @@
     "visibility": 16093,
     "wind": {
       "speed": 1.5,
-      "deg": 350
+      "deg": 3
     },
     "clouds": {
       "all": 1
