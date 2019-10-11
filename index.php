@@ -54,20 +54,7 @@
 				$city4->name = $citiesNames[3];
 				$city4->parameters = $query[3];
 				array_push($cities, $city4);
-			}
-
-			
-			print_r($cities[0]->name);
-			?><br><?php
-			print_r($cities[1]->name);
-			?><br><?php
-			print_r($cities[2]->name);
-			?><br><?php
-			print_r($cities[3]->name);
-			?><br><?php
-				
-
-			
+			}	
 
 			// Set fuction to descending sort by temp
 			function sort_temp($a, $b) {
@@ -103,6 +90,30 @@
 			usort($windArray, "sort_wind");
 			usort($humidityArray, "sort_humidity");
 
+			// Find cities position by weather parameter
+			foreach($cities as $city){
+				$city->temp_pos = array_search($city->name, array_column($tempArray, 'name'))+1;
+				$city->wind_pos = array_search($city->name, array_column($windArray, 'name'))+1;
+				$city->humidity_pos = array_search($city->name, array_column($humidityArray, 'name'))+1;
+			}
+
+			print_r($city1->humidity_pos." ".$city1->name." ".$city1->parameters->main->humidity);
+			// print_r($city1->wind_pos);
+			// print_r($city1->humidity_pos);
+			?><br><?php
+			print_r($city2->humidity_pos." ".$city2->name." ".$city2->parameters->main->humidity);
+			// print_r($city2->wind_pos);
+			// print_r($city2->humidity_pos);
+			?><br><?php
+			print_r($city3->humidity_pos." ".$city3->name." ".$city3->parameters->main->humidity);
+			// print_r($city3->wind_pos);
+			// print_r($city3->humidity_pos);
+			?><br><?php
+			print_r($city4->humidity_pos." ".$city4->name." ".$city4->parameters->main->humidity);
+			// print_r($city4->wind_pos);
+			// print_r($city4->humidity_pos);
+			?><br><?php
+		
 		}
 	}
 
