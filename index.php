@@ -1,6 +1,8 @@
 <?php
+	// error_reporting(0);
+	// ini_set('display_errors', 0);
 
-	$errorsData = array("citiesCountError" => '');
+	$errorsData = array("citiesCountError" => '', "citiesNameError" => '');
 	
 	// Handle the Form Respose
 	if(isset($_GET['submit'])){
@@ -24,114 +26,119 @@
 				'2ac700374182899bbe8d43dc4d52d3c6',
 				'66ed475d4d5b55a23ee8f7f72568a304'
 			];
-			// $v=0;
-			$v=1;
+			// $v = 0;
+			$v = 1;
 			foreach ($citiesNames as $city) {
 				// if(!empty($apiKeys[$v])){		
 				if(!empty($apiKeys[$v-1])){		
-					// array_push($query, json_decode(file_get_contents('api.openweathermap.org/data/2.5/weather?q='.$city.'&APPID='.$apiKeys[$v])));
-					array_push($query, json_decode(file_get_contents('data/example'.$v.'.json')));
+					// array_push($query, json_decode(file_get_contents('http://api.openweathermap.org/data/2.5/weather?q='.$city.'&APPID='.$apiKeys[$v])));
+					array_push($query, json_decode(file_get_contents('data/city'.$v.'.json')));
 					$v++;
+					// var_dump(date("Y-m-d",time()));
 				}else{
 					header("Location: keyalert.php");
 					die();
 				}
 			}
+			// Validation of response from API
+			if(count($citiesNames) != count($query) || in_array(null, $query) == true){
+				$errorsData['citiesNameError'] = 'Brak danych! Sprawdź, czy nazwy miast są poprawne!';
+			}else{
 
-			// Save API response to files
-			$v = 1;
-			foreach ($query as $city) {
-				file_put_contents('data/city'.$v.'.json', json_encode($city));
-				$v++;
-			}
+				// // This is function to save API response to files for test
+				// $u = 1;
+				// foreach ($query as $city) {
+				// 	file_put_contents('data/city'.$u.'.json', json_encode($city));
+				// 	$u++;
+				// }
 
-			// // This is function to test aplication without request to API
-			// $v=1;
-			// foreach ($citiesNames as $city) {
-			// 	array_push($query, json_decode(file_get_contents('data/example'.$v.'.json')));
-			// 	$v++;
-			// }
+				// // This is function to test aplication without request to API
+				// $v=1;
+				// foreach ($citiesNames as $city) {
+				// 	array_push($query, json_decode(file_get_contents('data/example'.$v.'.json')));
+				// 	$v++;
+				// }
 
-			// Creat cities objects
-			$cities = [];
-			for ($i=0; $i < count($citiesNames); $i++) {
-				if(!empty($citiesNames[$i])){
-					$city = new stdClass();
-					$city->cityName = $citiesNames[$i];
-					$city->parameters = $query[$i];
-					array_push($cities, $city);
-				}		
-			}
-
-			// Set fuction to descending sort by temp
-			function sort_temp($a, $b) {
-				$a = $a->parameters->main->temp;
-				$b = $b->parameters->main->temp;
-				if($a == $b){
-					return 0;
+				// Creat cities objects
+				$cities = [];
+				for ($i=0; $i < count($citiesNames); $i++) {
+					if(!empty($citiesNames[$i])){
+						$city = new stdClass();
+						$city->cityName = $citiesNames[$i];
+						$city->parameters = $query[$i];
+						array_push($cities, $city);
+					}		
 				}
-				return ($a > $b) ? -1 : 1;
-			}
 
-			// Set fuction to ascending sort by wind
-			function sort_wind($a, $b) {
-				$a = $a->parameters->wind->speed;
-				$b = $b->parameters->wind->speed;
-				if($a == $b){
-					return 0;
+				// Set fuction to descending sort by temp
+				function sort_temp($a, $b) {
+					$a = $a->parameters->main->temp;
+					$b = $b->parameters->main->temp;
+					if($a == $b){
+						return 0;
+					}
+					return ($a > $b) ? -1 : 1;
 				}
-				return ($a < $b) ? -1 : 1;
-			}
 
-			// Set fuction to ascending sort by humidity
-			function sort_humidity($a, $b) {
-				$a = $a->parameters->main->humidity;
-				$b = $b->parameters->main->humidity;
-				if($a == $b){
-					return 0;
+				// Set fuction to ascending sort by wind
+				function sort_wind($a, $b) {
+					$a = $a->parameters->wind->speed;
+					$b = $b->parameters->wind->speed;
+					if($a == $b){
+						return 0;
+					}
+					return ($a < $b) ? -1 : 1;
 				}
-				return ($a < $b) ? -1 : 1;
-			}
-			
-			// Define arrays to sort
-			$tempArray = $cities;
-			$windArray = $cities;
-			$humidityArray = $cities;
 
-			// Sorting arrays
-			usort($tempArray, "sort_temp");
-			usort($windArray, "sort_wind");
-			usort($humidityArray, "sort_humidity");
-
-			// Find cities position by weather parameter
-			foreach($cities as $city){
-				$city->temp_pos = array_search($city->cityName, array_column($tempArray, 'cityName'))+1;
-				$city->wind_pos = array_search($city->cityName, array_column($windArray, 'cityName'))+1;
-				$city->humidity_pos = array_search($city->cityName, array_column($humidityArray, 'cityName'))+1;
-			}
-
-			// Calculate the summary position of cities
-			$temp_factor = 0.6;
-			$wind_factor = 0.3;
-			$umidity_factor = 0.1;
-			foreach($cities as $city){
-				$city->score = 	(100 - 10 * ($city->temp_pos - 1)) * $temp_factor + 
-								(100 - 10 * ($city->wind_pos - 1)) * $wind_factor +
-								(100 - 10 * ($city->humidity_pos - 1)) * $umidity_factor;
-			}
-
-			// Sort cities by result
-			function sort_score($a, $b) {
-				$a = $a->score;
-				$b = $b->score;
-				if($a == $b){
-					return 0;
+				// Set fuction to ascending sort by humidity
+				function sort_humidity($a, $b) {
+					$a = $a->parameters->main->humidity;
+					$b = $b->parameters->main->humidity;
+					if($a == $b){
+						return 0;
+					}
+					return ($a < $b) ? -1 : 1;
 				}
-				return ($a > $b) ? -1 : 1;
+
+				// Define arrays to sort
+				$tempArray = $cities;
+				$windArray = $cities;
+				$humidityArray = $cities;
+
+				// Sorting arrays
+				usort($tempArray, "sort_temp");
+				usort($windArray, "sort_wind");
+				usort($humidityArray, "sort_humidity");
+
+				// Find cities position by weather parameter
+				foreach($cities as $city){
+					$city->temp_pos = array_search($city->cityName, array_column($tempArray, 'cityName'))+1;
+					$city->wind_pos = array_search($city->cityName, array_column($windArray, 'cityName'))+1;
+					$city->humidity_pos = array_search($city->cityName, array_column($humidityArray, 'cityName'))+1;
+				}
+
+				// Calculate the summary position of cities
+				$temp_factor = 0.6;
+				$wind_factor = 0.3;
+				$umidity_factor = 0.1;
+				foreach($cities as $city){
+					$city->score = 	(100 - 10 * ($city->temp_pos - 1)) * $temp_factor + 
+									(100 - 10 * ($city->wind_pos - 1)) * $wind_factor +
+									(100 - 10 * ($city->humidity_pos - 1)) * $umidity_factor;
+				}
+
+				// Sort cities by result
+				function sort_score($a, $b) {
+					$a = $a->score;
+					$b = $b->score;
+					if($a == $b){
+						return 0;
+					}
+					return ($a > $b) ? -1 : 1;
+				}
+
+				usort($cities, "sort_score");
 			}
-				
-			usort($cities, "sort_score");
-			
 		}
 	}
 
@@ -182,6 +189,7 @@
 		<div class="row">
 			<div class="col text-center">
 			<?php echo '<div class="text-danger">'.$errorsData["citiesCountError"].'</div>' ?>
+			<?php echo '<div class="text-danger">'.$errorsData["citiesNameError"].'</div>' ?>
 			</div>
 		</div>
 		<!-- Cities input end-->
