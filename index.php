@@ -1,6 +1,6 @@
 <?php
-	// error_reporting(0);
-	// ini_set('display_errors', 0);
+	error_reporting(0);
+	ini_set('display_errors', 0);
 
 	$errorsData = array("citiesCountError" => '', "citiesNameError" => '');
 	
@@ -26,24 +26,37 @@
 				'2ac700374182899bbe8d43dc4d52d3c6',
 				'66ed475d4d5b55a23ee8f7f72568a304'
 			];
-			// $v = 0;
-			$v = 1;
+
+
+			// Commented lines of code are for testing.
+			// Uncomment them and comment lines below the to test with data from files.
+			// It's important to send first request to API for save response to files.
+
+			$v = 0;
+			// $v = 1;
+
 			foreach ($citiesNames as $city) {
-				// if(!empty($apiKeys[$v])){		
-				if(!empty($apiKeys[$v-1])){		
-					// array_push($query, json_decode(file_get_contents('http://api.openweathermap.org/data/2.5/weather?q='.$city.'&APPID='.$apiKeys[$v])));
-					array_push($query, json_decode(file_get_contents('data/city'.$v.'.json')));
+
+				if(!empty($apiKeys[$v])){		
+				// if(!empty($apiKeys[$v-1])){	
+
+					array_push($query, json_decode(file_get_contents('http://api.openweathermap.org/data/2.5/weather?q='.$city.'&APPID='.$apiKeys[$v])));
+					// array_push($query, json_decode(file_get_contents('data/city'.$v.'.json')));
+					
 					$v++;
-					// var_dump(date("Y-m-d",time()));
 				}else{
 					header("Location: keyalert.php");
 					die();
 				}
 			}
+
+
 			// Validation of response from API
 			if(count($citiesNames) != count($query) || in_array(null, $query) == true){
 				$errorsData['citiesNameError'] = 'Brak danych! Sprawdź, czy nazwy miast są poprawne!';
 			}else{
+
+				$time = date("Y-m-d",time());
 
 				// // This is function to save API response to files for test
 				// $u = 1;
@@ -165,19 +178,19 @@
 				<div class="form-row m-2 align-items-end">
 					<div class="col">
 						<label for="city1">Podaj miasto</label>
-						<input type="text" class="form-control" id="city1" name="city1" placeholder="Pierwsze miasto" value="Hurzuf">
+						<input type="text" class="form-control" id="city1" name="city1" placeholder="Pierwsze miasto">
 					</div>
 					<div class="col">
 						<label for="city2">Podaj miasto</label>
-						<input type="text" class="form-control" id="city2" name="city2" placeholder="Drugie miasto" value="Novinki">
+						<input type="text" class="form-control" id="city2" name="city2" placeholder="Drugie miasto">
 					</div>
 					<div class="col">
 						<label for="city3">Podaj miasto</label>
-						<input type="text" class="form-control" id="city3" name="city3" placeholder="Trzecie miasto" value="Gorkhā">
+						<input type="text" class="form-control" id="city3" name="city3" placeholder="Trzecie miasto">
 					</div>
 					<div class="col">
 						<label for="city4">Podaj miasto</label>
-						<input type="text" class="form-control" id="city4" name="city4" placeholder="Czwarte miasto" value="State of Haryāna">
+						<input type="text" class="form-control" id="city4" name="city4" placeholder="Czwarte miasto">
 					</div>
 					<div class="col">
 						<button id="submit" type="submit" name="submit" class="btn btn-primary mx-2">Porównaj</button>
@@ -199,7 +212,7 @@
 		<!-- Ranking result -->
 		
 			<div class="row mx-0">
-				<h4 class="col text-center">Ranking z dnia <span>09.09.2019</span></h4>
+				<h4 class="col text-center">Ranking z dnia <span><?php echo $time ?></span></h4>
 			</div>
 			<div class="row justify-content-center mx-0">
 				<div class="col-8 mx-auto">
